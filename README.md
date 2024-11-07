@@ -1,6 +1,6 @@
 ## Getting Started
 
-First, build the app files by using `./build`
+First, build the app files by using `./build.sh`
 
 After you build, there should be a `bin` file
 
@@ -8,7 +8,6 @@ Unlike MOOS-IVP extend, the raw apps to be built are stored in:
 ```
 moos-ivp/ivp/src/
 ```
-
 
 ## Augmenting the $PATH to include apps
 
