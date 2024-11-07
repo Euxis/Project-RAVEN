@@ -6,7 +6,7 @@ After you build, there should be a `bin` file
 
 Unlike MOOS-IVP extend, the raw apps to be built are stored in:
 ```
-moos-ivp/ivp/src/
+../ivp/src/
 ```
 
 ### Can't build, no permission
