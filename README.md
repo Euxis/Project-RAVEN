@@ -1,3 +1,9 @@
+## Getting Started
+
+First, build the app files by using `./build`
+
+After you build, there should be a `bin` file
+
 Unlike MOOS-IVP extend, the raw apps to be built are stored in:
 ```
 moos-ivp/ivp/src/
@@ -12,11 +18,11 @@ Go to `Ubuntu/home/` and open `.bashrc` with any text editor of your choosing.
 
 At the end of the file, type in:
 ```
-export PATH=$PATH:"/home/<name>/RAVEN/MOOS-IVP/moos-ivp/bin"
+export PATH=$PATH:"/home/<name>/../Project-RAVEN/bin"
 ```
 and
 ```
-export PATH=$PATH:"/home/<name>/RAVEN/MOOS-IVP/moos-ivp/scripts/"
+export PATH=$PATH:"/home/<name>/../Project-RAVEN/ivp/scripts/"
 ```
 
 **DO NOT FORGET TO PUT `$PATH` OR ELSE YOUR PATH VARIABLE WILL BE CLEARED**
