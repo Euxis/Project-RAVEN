@@ -13,7 +13,7 @@ Unlike MOOS-IVP extend, the raw apps to be built are stored in:
 
 This means you don't have execution permission for the file.
 
-Run `cmod +x <filename>` to add execution permission to it. You might have to do the same for `build-moos.sh` and `build-ivp.sh`
+Run `chmod +x <filename>` to add execution permission to it. You might have to do the same for `build-moos.sh` and `build-ivp.sh`
 
 ### Can't build, "/bin/bash^M: bad interpreter: No such file or directory"
 
