@@ -9,6 +9,7 @@
 #include "MBUtils.h"
 #include "ACTable.h"
 #include "Odometry.h"
+#include <cmath>
 
 using namespace std;
 
@@ -83,7 +84,14 @@ bool Odometry::OnConnectToServer()
 bool Odometry::Iterate()
 {
   AppCastingMOOSApp::Iterate();
-  // Do your thing here!
+  double oldX = m_previous_x;
+  double oldY = m_previousy;
+  double newX = m_current_x;
+  double newY = m_current_y;
+
+  double currentDistance = sqrt(pow((newX - oldX),2) + pow((newY - oldX),2));
+
+  ODOMETRY_DIST = currentDistance; 
   AppCastingMOOSApp::PostReport();
   return(true);
 }
