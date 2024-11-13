@@ -17,9 +17,9 @@ Run `chmod +x <filename>` to add execution permission to it. You might have to d
 
 ### Can't build, "/bin/bash^M: bad interpreter: No such file or directory"
 
-This means that the `build.sh` file was saved in Windows when you're using Unix. The easiest fix is to open the file in vim, with `vim build.sh` and typing `:set fileformat=unix` and pressing Enter.
+This usually happens when you're using Windows. The easiest fix is to open the file in vim, with `vim build.sh` and typing `:set fileformat=unix` and pressing Enter.
 
-You'll probably have to do the `build-moos.sh` and `build-ivp.sh` 
+You'll probably have to do the same for `build-moos.sh` and `build-ivp.sh` 
 
 
 ## Augmenting the $PATH to include apps
