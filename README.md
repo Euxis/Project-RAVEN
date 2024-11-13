@@ -19,7 +19,7 @@ Run `chmod +x <filename>` to add execution permission to it. You might have to d
 
 This usually happens when you're using Windows. The easiest fix is to open the file in vim, with `vim build.sh` and typing `:set fileformat=unix` and pressing Enter.
 
-You'll probably have to do the same for `build-moos.sh` and `build-ivp.sh` 
+You'll probably have to do the same for `build-moos.sh` and `build-ivp.sh`, along with any `.sh` files that you intend to run.
 
 
 ## Augmenting the $PATH to include apps
