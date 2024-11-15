@@ -1,4 +1,4 @@
-#!/bin/bash 
+!/bin/bash 
 #------------------------------------------------------------ 
 #   Script: launch_shoreside.sh    
 #  Mission: m2_berta

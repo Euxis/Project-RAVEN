@@ -1,12 +1,16 @@
 //*******************************************************
 // ShoreSide Configuration File
-//
 
 ServerHost = localhost
 ServerPort = 9000
 Community  = shoreside
 
-#include plugs.moos <origin_warp>
+MOOSTimeWarp = 1
+LatOrigin  = 43.825300 
+LongOrigin = -70.330400 
+
+
+
 
 //--------------------------------------------------------
 ProcessConfig = ANTLER
@@ -14,18 +18,62 @@ ProcessConfig = ANTLER
   MSBetweenLaunches = 100
 
   Run = MOOSDB          @ NewConsole = false
-  Run = pRealm          @ NewConsole = false
   Run = pMarineViewer   @ NewConsole = false
+  Run = uSimMarineV22   @ NewConsole = false
 
   Run = pShare          @ NewConsole = false
   Run = pHostInfo       @ NewConsole = false
   Run = uFldShoreBroker @ NewConsole = false
   Run = uFldNodeComms   @ NewConsole = false
-  Run = pLogger         @ NewConsole = false
 }
 
-#include plugs.moos <pShare>
-#include plugs.moos <pHostInfo>
+//---------------------------------------------------------
+// pShare Config Block  (Created from Plugin)
+
+ProcessConfig = pShare
+{
+  AppTick    = 2
+  CommsTick  = 2
+
+  input = route =  localhost:9300
+
+  // =======================================================
+  // Usage Info below
+  // =======================================================
+
+  // Simple forward of X to A on channel 8
+  // output = src_name = X,dest_name=A, route=multicast_8
+ 
+  // Simple forward of Y to B on a udp address
+
+  //output = src_name=Y, dest_name=B, route=localhost:9300
+ 
+  // Simple forward of Z to Z on a named address (no renaming)
+  // output = src_name = Z, route = oceanai.mit.edu:9020
+ 
+  // Setting up an input
+  // input = route = multicast_9
+  
+  //input = route = localhost:9300 & multicast_9
+
+ 
+  // Setting up lots of inputs at once
+  // input = route = "localhost:9069 & multicast_19 & multicast_65"
+}
+
+
+//--------------------------------------------------
+// pHostInfo configuration block from plugin
+
+ProcessConfig = pHostInfo
+{
+  AppTick 	= 1
+  CommsTick 	= 1
+
+  DEFAULT_HOSTIP = localhost
+}
+
+
 
 //--------------------------------------------------
 // uFldShoreBroker Configuration Block
@@ -42,9 +90,8 @@ ProcessConfig = uFldShoreBroker
   qbridge  = DEPLOY, RETURN, STATION, NODE_REPORT, NODE_MESSAGE
   qbridge  = MOOS_MANUAL_OVERRIDE, APPCAST_REQ
 
-  bridge   = src=TRAILING_ALLOWED, alias=TRAILING_ALLOWED 
+  bridge   = src=TRAILING_ALLOWED, alias=TRAILING_ALLOWED
   bridge   = src=PATROL, alias=PATROL
-  bridge   = src=TRAIL, alias=TRAIL
 }
 
 //--------------------------------------------------
@@ -55,8 +102,8 @@ ProcessConfig = uFldNodeComms
   AppTick       = 2
   CommsTick     = 2
 
-           comms_range = 500
-        critical_range = 25
+           comms_range = 50
+        critical_range = 10
       min_msg_interval = 20
         max_msg_length = 1000
                 groups = true
@@ -69,23 +116,22 @@ ProcessConfig = pMarineViewer
   AppTick    = 4
   CommsTick  = 4
 
-  tiff_file            = MIT_SP.tif
+  tiff_file            = forrest19.tif
   set_pan_x            = -90
   set_pan_y            = -280
   zoom                 = 0.55
   vehicles_shape_scale = 1.5
   vehicles_name_mode   = names+shortmode
 
-
-	polygon_viewable_labels = false
-	node_pulse_viewable_all = false
-  appcast_viewable        = true
-  appcast_color_scheme    = indigo
+  appcast_viewable     = true
+  appcast_color_scheme = indigo
 
   scope = CONTACT_INFO
 
   action = STATION_ALL = false
   action = STATION_ALL = true
+  action = NODE_MESSAGE_LOCAL, val="src_node=$(VNAME),dest_node=all, 
+		var_name=RETURN,RETURN=true"
 
   button_one   = DEPLOY  # DEPLOY_ALL=true 
   button_one   = MOOS_MANUAL_OVERRIDE_ALL=false 
@@ -95,26 +141,19 @@ ProcessConfig = pMarineViewer
   button_two   = RETURN  # RETURN_ALL=true # PATROL=false
   button_two   = PATROL=false # TRAIL=false
 
-  button_three = TRAIL-YES # PATROL=false # TRAILING_ALLOWED=true
-  button_three = TRAIL=true
-  button_four  = TRAIL-NO # TRAILING_ALLOWED=false
+  button_three = TRAIL-YES # PATROL=true # TRAILING_ALLOWED=true
+  button_four = TRAIL-NO # TRAILING_ALLOWED=false
 }
 
-//--------------------------------------------------
-// pLogger config block
-
-ProcessConfig = pLogger
+//--------------------------------------------------------
+ProcessConfig = uXMS
 {
-  AppTick       = 10
-  CommsTick     = 10
+  AppTick    = 5
+  CommsTick  = 5
 
-  File          = XLOG_SHORESIDE
-  PATH          = ./
-  AsyncLog      = true
-  FileTimeStamp = true
+  var  = NODE_REPORT
+  var  = VIEW_POLYGON
+  var  = VIEW_POINT
+  var  = DEPLOY_ALL
+}   
 
-  Log = MOB_ALERT @ 0 nosync
-
-  // Log it all!!!!!
-  WildCardLogging = true
-}

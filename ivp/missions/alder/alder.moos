@@ -24,7 +24,6 @@ ProcessConfig = ANTLER
   Run = pMarineViewer	@ NewConsole = false
   Run = uProcessWatch   @ NewConsole = false
   Run = pHelmIvP	@ NewConsole = false
-  Run = pOdometry	@ NewConsole = false
 }
 
 //------------------------------------------

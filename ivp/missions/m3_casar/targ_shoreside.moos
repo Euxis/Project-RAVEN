@@ -6,7 +6,12 @@ ServerHost = localhost
 ServerPort = 9000
 Community  = shoreside
 
-#include plugs.moos <origin_warp>
+MOOSTimeWarp = 1
+
+// MIT Sailing Pavilion                                                    
+LatOrigin = 42.358436
+LongOrigin = -71.087448
+
 
 //--------------------------------------------------------
 ProcessConfig = ANTLER
@@ -24,8 +29,28 @@ ProcessConfig = ANTLER
   Run = pLogger         @ NewConsole = false
 }
 
-#include plugs.moos <pShare>
-#include plugs.moos <pHostInfo>
+//--------------------------------------------------
+// pShare Config Block
+
+ProcessConfig = pShare
+{
+  AppTick    = 2
+  CommsTick  = 2
+
+  input = route =  localhost:9200, white_list=DEPLOY & MOOS_MANUAL_OVERRIDE & NODE_BROKER_ACK & APPCAST_REQ 
+}
+
+//--------------------------------------------------
+// pHostInfo Config Block
+
+ProcessConfig = pHostInfo
+{
+  AppTick 	= 1
+  CommsTick = 1
+
+  default_hostip_force = localhost
+}
+
 
 //--------------------------------------------------
 // uFldShoreBroker Configuration Block
@@ -118,3 +143,4 @@ ProcessConfig = pLogger
   // Log it all!!!!!
   WildCardLogging = true
 }
+
