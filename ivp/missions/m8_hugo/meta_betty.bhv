@@ -9,7 +9,7 @@ Behavior = BHV_Waypoint
   name      = waypt_survey
   pwt       = 100
   condition = RETURN = false
-  condition = (DEPLOY = true)
+  condition = (DEPLOY = false)
   endflag   = RETURN = true
   perpetual = true
 
@@ -33,7 +33,7 @@ Behavior = BHV_Waypoint
   name       = waypt_return
   pwt        = 100
   condition  = RETURN = true
-  condition  = DEPLOY = true
+  condition  = DEPLOY = false
   perpetual  = true
   endflag    = RETURN = false
   endflag    = DEPLOY = false

@@ -1,0 +1,269 @@
+ServerHost = localhost
+ServerPort = 9001
+
+// Community name IS the vehicle name
+Community  = archie
+
+MOOSTimeWarp = 1
+//LatOrigin  = 43.825300 
+//LongOrigin = -70.330400 
+LatOrigin  = 42.3584
+LongOrigin = -71.08745
+
+  
+//------------------------------------------------------------
+Processconfig = ANTLER
+{
+  MSBetweenLaunches = 100
+   
+  Run = MOOSDB             @ NewConsole = false
+	Run = pRealm             @ NewConsole = false
+  Run = uSimMarine         @ NewConsole = false
+  Run = pLogger            @ NewConsole = false
+  Run = pNodeReporter      @ NewConsole = false
+  Run = pMarinePID         @ NewConsole = false
+  Run = pHelmIvP           @ NewConsole = false
+  Run = uProcessWatch      @ NewConsole = false
+
+  Run = pShare             @ NewConsole = false
+  Run = pHostInfo          @ NewConsole = false
+  Run = uFldNodeBroker     @ NewConsole = false
+  Run = uFldMessageHandler @ NewConsole = false
+  Run = uFldHazardMgr      @ NewConsole = false
+}
+  
+//--------------------------------------------------
+// uFldNodeBroker configuration block from plugin
+
+ProcessConfig = uFldNodeBroker
+{
+  AppTick   = 1
+  CommsTick = 1
+
+  try_shore_host = pshare_route=multicast_9
+
+  bridge = src=VIEW_POLYGON
+  bridge = src=VIEW_POINT
+  bridge = src=VIEW_SEGLIST
+  bridge = src=APPCAST
+  bridge = src=UHZ_CLASSIFY_REQUEST
+  bridge = src=UHZ_SENSOR_REQUEST
+  bridge = src=UHZ_CONFIG_REQUEST
+  bridge = src=HAZARDSET_REPORT
+  bridge = src=NODE_REPORT_LOCAL,  alias=NODE_REPORT
+  bridge = src=NODE_MESSAGE_LOCAL, alias=NODE_MESSAGE
+}
+
+//---------------------------------------------------------
+// pShare Config Block  (Created from Plugin)
+
+ProcessConfig = pShare
+{
+  AppTick    = 2
+  CommsTick  = 2
+
+  input = route =  localhost:9301
+
+  // =======================================================
+  // Usage Info below
+  // =======================================================
+
+  // Simple forward of X to A on channel 8
+  // output = src_name = X,dest_name=A, route=multicast_8
+ 
+  // Simple forward of Y to B on a udp address
+
+  // output = src_name=Y, dest_name=B, route=localhost:9300
+ 
+  // Simple forward of Z to Z on a named address (no renaming)
+  // output = src_name = Z, route = oceanai.mit.edu:9020
+ 
+  // Setting up an input
+  // input = route = multicast_9
+  
+  // input = route = localhost:9301 & multicast_9
+
+ 
+  // Setting up lots of inputs at once
+  // input = route = "localhost:9069 & multicast_19 & multicast_65"
+}
+
+
+//--------------------------------------------------
+// pHostInfo configuration block from plugin
+
+ProcessConfig = pHostInfo
+{
+  AppTick 	= 1
+  CommsTick 	= 1
+
+  default_hostip = localhost
+}
+
+
+//--------------------------------------------------
+// uFldMessageHandler configuration block from plugin
+
+ProcessConfig = uFldMessageHandler
+{
+  AppTick   = 3
+  CommsTick = 3
+
+  STRICT_ADDRESSING = false
+}
+
+//--------------------------------------------------
+// uFldHazardMgr configuration block from plugin
+
+ProcessConfig = uFldHazardMgr
+{
+  AppTick   = 2
+  CommsTick = 2
+
+  swath_width = 50
+  sensor_pd   = 0.86
+  report_name = archie
+}
+
+
+//------------------------------------------------------
+// uSimMarine Configuration Block  (Created from plugin)
+
+ProcessConfig = uSimMarine
+{
+  AppTick   = 10
+  CommsTick = 10
+
+  START_POS = 0,0, 180, 0
+  PREFIX    = NAV
+
+  BUOYANCY_RATE    = 0.025
+  MAX_DEPTH_RATE = 0.5
+  MAX_DEPTH_RATE_SPEED = 2.0
+}
+
+
+
+//----------------------------------------------------
+// pHelmIvP Configuration Block  (Created from Plugin)
+
+ProcessConfig = pHelmIvP
+{
+  AppTick    = 2
+  CommsTick  = 2
+  
+  Behaviors    = targ_archie.bhv  
+  Verbose      = false
+  Domain       = course:0:359:360
+  Domain       = speed:0:5:26
+
+  Domain       = depth:0:10:101
+
+}
+
+//-----------------------------------------------------
+// pMarinePID Configuration Block (created from plugin)
+
+ProcessConfig = pMarinePID
+{
+  AppTick    = 10
+  CommsTick  = 10
+  
+  verbose       = true
+  depth_control = false
+  active_start  = true
+  
+  // Yaw PID controller
+  yaw_pid_kp             = 0.4
+  yaw_pid_kd             = 0.1
+  yaw_pid_ki             = 0.0
+  yaw_pid_integral_limit = 0.07
+  
+  // Speed PID controller
+  speed_pid_kp           = 1.0
+  speed_pid_kd           = 0.0
+  speed_pid_ki           = 0.0
+  speed_pid_integral_limit = 0.07
+  
+  //Pitch PID controller
+  pitch_pid_kp                   = 0.5
+  pitch_pid_kd                   = 1.0
+  pitch_pid_ki                   = 0
+  pitch_pid_integral_limit       = 0
+
+  //ZPID controller
+  z_to_pitch_pid_kp              = 0.12
+  z_to_pitch_pid_kd              = 0
+  z_to_pitch_pid_ki              = 0.004
+  z_to_pitch_pid_integral_limit  = 0.05
+
+  maxpitch     = 15
+  maxelevator  = 13
+
+  // Maximums
+  maxrudder  = 100
+  maxthrust  = 100
+  
+  // A non-zero SPEED_FACTOR overrides use of SPEED_PID
+  // Will set DESIRED_THRUST = DESIRED_SPEED * SPEED_FACTOR
+  speed_factor = 20
+}
+
+//--------------------------------------------------
+// pLogger Configuration Block (Created from Plugin)
+
+ProcessConfig = pLogger
+{
+  AppTick 	= 5
+  CommsTick 	= 5
+  
+  File		= LOG_ARCHIE
+  PATH		= ./
+  SyncLog 	= true @ 0.2
+  AsyncLog 	= true
+  FileTimeStamp = true
+
+  Log = IVPHELM_LIFE_EVENT @ 0 nosync
+
+  // Log it all!!!!!
+  WildCardLogging = true 
+  WildCardOmitPattern = *_STATUS
+  WildCardOmitPattern = DB_VARSUMMARY
+  WildCardOmitPattern = DB_RWSUMMARY
+  LogAuxSrc = true
+}
+
+//--------------------------------------------------------
+// pNodeReporter Configuration Block (Created from Plugin)
+
+ProcessConfig = pNodeReporter
+{
+  AppTick     = 2
+  CommsTick   = 2
+  
+  platform_type = UUV
+}
+
+//--------------------------------------------------------
+// uProcessWatch Configuration Block (Created from Plugin)
+
+ProcessConfig = uProcessWatch
+{
+  AppTick   = 2
+  CommsTick = 2
+  
+  NOWATCH = uXMS*
+
+  WATCH_ALL = true
+
+  WATCH  = uSimMarine
+  WATCH  = pShare*
+  WATCH  = pLogger
+  WATCH  = pNodeReporter
+  WATCH  = pMarinePID
+  WATCH  = pHelmIvP
+}
+
+
+
+

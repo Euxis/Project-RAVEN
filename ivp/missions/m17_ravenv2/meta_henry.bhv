@@ -27,16 +27,24 @@ set MODE = PATROLLING {
 
 set MODE = TRAILING {
   MODE   = ACTIVE
-  PATROL = true
+  PATROL = false
   TRAILING_ALLOWED = true
   TRAIL  = true
 } 
+
+set MODE = AVOID{
+  MODE = ACTIVE
+  PATROL = true
+  TRAILING_ALLOWED = false
+  TRAIL = false
+
+}
 
 //----------------------------------------------
 Behavior = BHV_Loiter
 {
   name      = loiter
-  pwt       = 100
+  pwt       = 50
   condition = MODE == PATROLLING
   updates   = UP_LOITER
 
@@ -86,45 +94,25 @@ Behavior = BHV_StationKeep
         visual_hints = vertex_size=0, edge_color=blue
 }
 
-
-//----------------------------------------------
-Behavior = BHV_AvoidCollision
-{
-  name       = avd_collision
-  pwt        = 400
-  condition  = MODE == ACTIVE
-  condition  = MODE != STATION-KEEPING
-  updates    = CONTACT_INFO
-  endflag    = CONTACT_RESOLVED = $[CONTACT],avd 
-  templating = spawn
-
-              contact = to-be-set
-       pwt_outer_dist = 50
-       pwt_inner_dist = 20
-       completed_dist = 145
-    min_util_cpa_dist = 8
-    max_util_cpa_dist = 25
-//         active_grade = linear
-     on_no_contact_ok = true
-          extrapolate = true
-                decay = 30,60
-  bearing_line_config = white:0, green:0.65, yellow:0.8, red:1.0
-}
-
 //----------------------------------------------
 Behavior = BHV_Trail
 {
   name       = trail_contact
-  pwt        = 100
+  pwt        = 300
   condition  = (MODE == TRAILING) or (MODE == PATROLLING)
   condition  = TRAILING_ALLOWED = true
   runflag    = TRAIL = true
   idleflag   = TRAIL = false
+  idleflag   = PATROL = true
   updates    = TRAIL_INFO
   templating = spawn
 
-              contact = to-be-set
-       pwt_outer_dist = 325
+          bearing_lines = true
+              contact = gilda
+              match_name = a
+              ignore_name = $(VNAME2)
+
+       pwt_outer_dist = 100
             nm_radius = 18
                radius = 8
           trail_angle = $(TRAIL_ANGLE)

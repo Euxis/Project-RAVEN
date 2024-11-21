@@ -23,9 +23,9 @@ done
 #-------------------------------------------------------
 #  Part 2: Create the .moos and .bhv files. 
 #-------------------------------------------------------
-VNAME1="henry"         # The first vehicle Community
-VNAME2="gilda"         # The second vehicle Community
-VNAME3="alpha"
+VNAME1="henry"         # The first vehicle Community. Represents RAVEN
+VNAME2="gilda"         # The second vehicle Community. Represents tracked vehicle
+VNAME3="alpha"         # shoreside?
 START_POS1="0,0"       # Vehicle 1 Behavior configurations
 START_POS2="80,-125"   # Vehicle 2 Behavior configurations
 START_POS3="70,-125"

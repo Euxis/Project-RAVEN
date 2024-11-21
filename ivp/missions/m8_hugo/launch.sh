@@ -28,6 +28,8 @@ VNAME1="archie"        # The first  surface vehicle community
 VNAME2="betty"         # The second surface vehicle community
 VNAME9="jackal"        # The uuv vehicle community
 
+VNAME3="shoreside"
+
 START_POS1="0,0"       
 START_POS2="10,-10"    
 START_POS9="-180,-100" 

@@ -127,9 +127,12 @@ ProcessConfig = uFldContactRangeSensor
   AppTick   = 4
   CommsTick = 4
 
+  reach_distance = default = 100
+  reply_distance = default = 100
+
   push_distance = jackal = 50
   push_distance = archie = 190
-  ping_wait     = archie = 32  
+  ping_wait     = archie = 1  
   ping_color    = white
   echo_color    = chartreuse
 
