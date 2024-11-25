@@ -1,0 +1,10 @@
+//--------    FILE: station.bhv   -------------
+
+// repurposed alpha.bhv to act like station
+
+initialize   DEPLOY = false
+initialize   RETURN = false
+
+
+
+

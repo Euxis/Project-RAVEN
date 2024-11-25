@@ -23,18 +23,18 @@ done
 #-------------------------------------------------------
 #  Part 2: Create the .moos and .bhv files. 
 #-------------------------------------------------------
-VNAME1="henry"         # The first vehicle Community. Represents RAVEN
+VNAME1="RAVEN"         # The first vehicle Community. Represents RAVEN
 VNAME2="gilda"         # The second vehicle Community. Represents tracked vehicle
-VNAME3="alpha"         # shoreside?
-START_POS1="0,0"       # Vehicle 1 Behavior configurations
+VNAME3="station"         # shoreside?
+START_POS1="0,0"       # RAVEN start position
 START_POS2="80,-125"   # Vehicle 2 Behavior configurations
-START_POS3="70,-125"
+START_POS3="50, -80"   # Stationary vehicle start position
 SHORE_LISTEN="9300"
 
 TRAIL_RANGE1="40"
 TRAIL_ANGLE1="045"
 
-nsplug meta_vehicle.moos targ_henry.moos -f WARP=$TIME_WARP \
+nsplug meta_vehicle.moos targ_RAVEN.moos -f WARP=$TIME_WARP \
    VNAME=$VNAME1      START_POS=$START_POS1                 \
    VPORT="9001"       SHARE_LISTEN="9301"                   \
    VTYPE="glider"      SHORE_LISTEN=$SHORE_LISTEN            \
@@ -45,7 +45,7 @@ nsplug meta_vehicle.moos targ_gilda.moos -f WARP=$TIME_WARP \
    VPORT="9002"       SHARE_LISTEN="9302"                   \
    VTYPE="kayak"      SHORE_LISTEN=$SHORE_LISTEN
    
-nsplug meta_vehicle.moos targ_alpha.moos -f WARP=$TIME_WARP \
+nsplug meta_vehicle.moos targ_station.moos -f WARP=$TIME_WARP \
    VNAME=$VNAME3      START_POS=$START_POS3                 \
    VPORT="9003"       SHARE_LISTEN="9303"                   \
    VTYPE="kayak"      SHORE_LISTEN=$SHORE_LISTEN
@@ -54,7 +54,7 @@ nsplug meta_shoreside.moos targ_shoreside.moos -f WARP=$TIME_WARP \
    SNAME="shoreside"  SHARE_LISTEN=$SHORE_LISTEN                  \
    SPORT="9000"     
 
-nsplug meta_henry.bhv targ_henry.bhv -f VNAME=$VNAME1  \
+nsplug meta_RAVEN.bhv targ_RAVEN.bhv -f VNAME=$VNAME1  \
     OVNAME=$VNAME2 START_POS=$START_POS2  \
     TRAIL_RANGE=$TRAIL_RANGE1              \
     TRAIL_ANGLE=$TRAIL_ANGLE1
@@ -62,7 +62,7 @@ nsplug meta_henry.bhv targ_henry.bhv -f VNAME=$VNAME1  \
 nsplug meta_gilda.bhv targ_gilda.bhv -f VNAME=$VNAME2  \
     OVNAME=$VNAME1 START_POS=$START_POS1
     
-nsplug alpha.bhv targ_alpha.bhv -f VNAME=$VNAME3  \
+nsplug station.bhv targ_station.bhv -f VNAME=$VNAME3  \
     OVNAME=$VNAME3 START_POS=$START_POS3  \
 
 if [ ${JUST_MAKE} = "yes" ] ; then
@@ -73,13 +73,13 @@ fi
 #  Part 3: Launch the processes
 #-------------------------------------------------------
 printf "Launching $VNAME1 MOOS Community (WARP=%s) \n" $TIME_WARP
-pAntler targ_henry.moos >& /dev/null &
+pAntler targ_RAVEN.moos >& /dev/null &
 sleep 0.25
 printf "Launching $VNAME2 MOOS Community (WARP=%s) \n" $TIME_WARP
 pAntler targ_gilda.moos >& /dev/null &
 sleep 0.25
 printf "Launching $VNAME3 MOOS Community (WARP=%s) \n" $TIME_WARP
-pAntler targ_alpha.moos >& /dev/null &
+pAntler targ_station.moos >& /dev/null &
 sleep 0.25
 printf "Launching $SNAME MOOS Community (WARP=%s) \n"  $TIME_WARP
 pAntler targ_shoreside.moos >& /dev/null &
