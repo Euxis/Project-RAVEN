@@ -1,4 +1,4 @@
-//--------    FILE: betty.bhv   -------------
+//--------    FILE: archie.bhv   -------------
 
 initialize   DEPLOY = false
 initialize   RETURN = false
@@ -9,7 +9,7 @@ Behavior = BHV_Waypoint
   name      = waypt_survey
   pwt       = 100
   condition = RETURN = false
-  condition = (DEPLOY = false)
+  condition = (DEPLOY = true)
   endflag   = RETURN = true
   perpetual = true
 
@@ -18,8 +18,6 @@ Behavior = BHV_Waypoint
    slip_radius = 15.0
 
 	points = -200,-130:-90,-420:-57,-402:-170,-120:-129,-104:-22,-388:20,-370:-84,-85:-42,-69:59,-354:100,-339:-2,-53:39,-34:140,-322:175,-311:80,-23:121,-7:216,-290:256,-275:167,3:203,14:296,-260:330,-244:244,6
-
-        order = reverse
 
         repeat = 1
   visual_hints = nextpt_color=yellow, nextpt_lcolor=aqua
@@ -33,7 +31,7 @@ Behavior = BHV_Waypoint
   name       = waypt_return
   pwt        = 100
   condition  = RETURN = true
-  condition  = DEPLOY = false
+  condition  = DEPLOY = true
   perpetual  = true
   endflag    = RETURN = false
   endflag    = DEPLOY = false
@@ -41,5 +39,6 @@ Behavior = BHV_Waypoint
          speed = 2.0
         radius = 2.0
      nm_radius = 8.0
-        points = $(START_POS)
+        points = 0,0
 }
+

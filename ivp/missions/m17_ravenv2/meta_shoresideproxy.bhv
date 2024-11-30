@@ -1,4 +1,8 @@
+initialize   DEPLOY  = false
 initialize LOITER = true
+
+// This is a stationary vehicle, so it won't move
+
 
 //-----------------------------------------------
 // Helm Behavior File
