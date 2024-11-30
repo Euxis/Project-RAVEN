@@ -7,7 +7,6 @@ Community  = $(SNAME)
 
 #include plug_origin_warp.moos
 
-
 //--------------------------------------------------------
 ProcessConfig = ANTLER
 {
@@ -16,6 +15,7 @@ ProcessConfig = ANTLER
   Run = MOOSDB          @ NewConsole = false
   Run = pMarineViewer   @ NewConsole = false
   Run = uSimMarineV22   @ NewConsole = false
+  Run = pLogger         @ NewConsole = false
 
   Run = pShare          @ NewConsole = false
   Run = pHostInfo       @ NewConsole = false
@@ -25,7 +25,6 @@ ProcessConfig = ANTLER
 
 #include plug_pShare.moos
 #include plug_pHostInfo.moos
-
 
 //--------------------------------------------------
 // uFldShoreBroker Configuration Block
@@ -40,10 +39,19 @@ ProcessConfig = uFldShoreBroker
   //       [BRIDGE = src=FOO_ALL, alias=FOO]
 
   qbridge  = DEPLOY, RETURN, STATION, NODE_REPORT, NODE_MESSAGE
+  //bridge  = src=DEPLOY_%(HENRY), alias=DEPLOY
+  //bridge  = src=RETURN_%(HENRY), alias=RETURN 
+  qbridge = STATION, NODE_REPORT, NODE_MESSAGE
+  
   qbridge  = MOOS_MANUAL_OVERRIDE, APPCAST_REQ
+  qbridge  = WPT_UPDATE
 
+
+  //bridge = src=DEPLOY_$V, alias=DEPLOY
+  bridge   = src=UP_LOITER_$V, alias=UP_LOITER
   bridge   = src=TRAILING_ALLOWED, alias=TRAILING_ALLOWED
   bridge   = src=PATROL, alias=PATROL
+  bridge   = src=TRACK
 }
 
 //--------------------------------------------------
@@ -54,11 +62,13 @@ ProcessConfig = uFldNodeComms
   AppTick       = 2
   CommsTick     = 2
 
-           comms_range = 50
+           comms_range = 100
         critical_range = 10
       min_msg_interval = 20
         max_msg_length = 1000
-                groups = true
+
+  shared_node_reports = true
+
   view_node_rpt_pulses = true
 }
 
@@ -74,6 +84,7 @@ ProcessConfig = pMarineViewer
   zoom                 = 0.55
   vehicles_shape_scale = 1.5
   vehicles_name_mode   = names+shortmode
+  marker_viewable_labels = false
 
   appcast_viewable     = true
   appcast_color_scheme = indigo
@@ -82,10 +93,28 @@ ProcessConfig = pMarineViewer
 
   action = STATION_ALL = false
   action = STATION_ALL = true
-  action = NODE_MESSAGE_LOCAL, val="src_node=$(VNAME),dest_node=all, 
-		var_name=RETURN,RETURN=true"
+  //action = NODE_MESSAGE ="src_node=$(VNAME),dest_node=all,var_name=DEPLOY,DEPLOY=true"
 
-  button_one   = DEPLOY  # DEPLOY_ALL=true 
+  
+
+  cmd = label=DEPLOY, var=DEPLOY,  sval=true,  receivers=all:$(HENRY)
+  cmd = label=DEPLOY, var=DEPLOY,  sval=true,  receivers=all:$(ALPHA)
+
+  ACTION  = DEPLOY_%(HENRY) = true
+  ACTION  = DEPLOY_%(HENRY) = false
+  ACTION  = RETURN_%(HENRY) = true
+  ACTION  = RETURN_%(HENRY) = false
+
+  ACTION  = TRACK_%(ALPHA) = true
+  ACTION  = TRACK_%(ALPHA) = false
+
+  // Sends coordinates of mouse to ALPHA
+  left_context[] = WPT_UPDATE_%(ALPHA) = point = $[XPOS], $[YPOS]
+  // Also sets tracking to true for ALPHA
+  left_context[] = TRACK = true
+
+  button_one   = DEPLOY  # DEPLOY_%(HENRY) = true
+  button_one   = DEPLOY  # DEPLOY_%(ALPHA) = true
   button_one   = MOOS_MANUAL_OVERRIDE_ALL=false 
   button_one   = RETURN_ALL=false 
   button_one   = PATROL=true

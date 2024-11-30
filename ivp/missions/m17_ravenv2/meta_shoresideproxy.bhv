@@ -1,4 +1,8 @@
+initialize   DEPLOY  = false
 initialize LOITER = true
+
+// This is a stationary vehicle, so it won't move
+
 
 //-----------------------------------------------
 // Helm Behavior File
@@ -21,30 +25,6 @@ set MODE = TRANSIT {
   MODE = ACTIVE
   LOITER = true
 } 
-
-Behavior = BHV_AvoidCollision
-{
-  name       = avdcollision_
-  pwt        = 400
-  condition  = AVOID == true
-  condition  = MODE != STATION-KEEPING
-  updates    = CONTACT_INFO
-  endflag    = CONTACT_RESOLVED = $[CONTACT] 
-  templating = spawn
-
-              contact = alpha
-              match_name = alpha
-       pwt_outer_dist = 50
-       pwt_inner_dist = 20
-       completed_dist = 145
-    min_util_cpa_dist = 10
-    max_util_cpa_dist = 75
-//         active_grade = linear
-     on_no_contact_ok = true
-          extrapolate = true
-                decay = 30,60
-  bearing_line_config = white:0, green:0.65, yellow:0.8, red:1.0
-}
 
 //----------------------------------------------
 Behavior = BHV_Loiter
