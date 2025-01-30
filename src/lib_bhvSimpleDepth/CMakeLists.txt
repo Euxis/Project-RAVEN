@@ -1,6 +1,6 @@
 #--------------------------------------------------------
-# The CMakeLists.txt for:              lib_behaviors-test
-# Author(s):                                
+# The CMakeLists.txt for:              lib_bhvSimpleDepth
+# Author(s):                            Scott R. Sideleau
 #--------------------------------------------------------
 
 # Set System Specific Libraries
@@ -31,11 +31,11 @@ ENDMACRO(ADD_BHV)
 
 
 #--------------------------------------------------------
-#                                      BHV_SimpleWaypoint
+#                                         BHV_SimpleDepth
 #--------------------------------------------------------
-ADD_LIBRARY(BHV_SimpleWaypoint SHARED 
-   BHV_SimpleWaypoint.cpp AOF_SimpleWaypoint.cpp)
-TARGET_LINK_LIBRARIES(BHV_SimpleWaypoint
+ADD_LIBRARY(BHV_SimpleDepth SHARED 
+  BHV_SimpleDepth.cpp )
+TARGET_LINK_LIBRARIES(BHV_SimpleDepth
    helmivp
    behaviors 
    ivpbuild 
@@ -45,20 +45,3 @@ TARGET_LINK_LIBRARIES(BHV_SimpleWaypoint
    mbutil 
    geometry 
    ${SYSTEM_LIBS} )
-
-#--------------------------------------------------------
-#                                      BHV_TrailTEST
-#--------------------------------------------------------
-#ADD_LIBRARY(BHV_TrailTEST SHARED 
-#   BHV_TrailTEST.cpp)
-#TARGET_LINK_LIBRARIES(BHV_TrailTEST
-#   helmivp
-#   behaviors 
-#   ivpbuild 
-#   logic 
-#   ivpcore 
-#   bhvutil 
-#   mbutil 
-#   geometry 
-#   ${SYSTEM_LIBS} )
-

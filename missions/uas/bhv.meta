@@ -1,0 +1,28 @@
+//----------------------------------------------------------------------------
+// Behavior (BHV) File for UMassD Operations (generated)
+#include all.def
+#include plugs/bhv_initialize.plug
+#include plugs/bhv_modes.plug
+#include plugs/bhv_deploy_survey.plug
+#include plugs/bhv_return.plug
+#ifdef simulation
+    #include plugs/bhv_hsline.plug
+#endif
+
+//----------------------------------------------
+Behavior = BHV_Loiter
+{
+  name      = loiter
+  pwt       = 100
+  condition = MODE == PATROLLING
+  updates   = UP_LOITER
+
+         speed = 1.3
+     clockwise = false
+        radius = 8.0
+     nm_radius = 15.0
+       polygon = radial:: x=20, y=30, radius=20, pts=8, snap=1, label=HENRY_LOITER
+  visual_hints = nextpt_color=white, nextpt_lcolor=khaki
+  visual_hints = edge_color=blue, vertex_color=blue
+  visual_hints = edge_size=1, vertex_size=2
+}
