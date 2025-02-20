@@ -3,6 +3,7 @@
 initialize   DEPLOY = false
 initialize   RETURN = false
 initialize   TRACK = false
+initialize   WAITING = false
 
 //-----------------------------------------------
 // Helm Behavior File
@@ -14,7 +15,13 @@ set MODE = ACTIVE {
 set MODE = RETURNING {
   MODE = ACTIVE
   RETURN = true
-} 
+}
+
+set MODE = WAIT {
+  MODE = ACTIVE
+  TRACK = false
+  WAIT = true
+}
 
 set MODE = TRACKING {
   MODE = ACTIVE
@@ -34,15 +41,18 @@ Behavior = BHV_Waypoint
   condition = RETURN = false
 
   // When this behavior ends, set mode to RETURN
-  endflag   = RETURN = true
-  endflag   = TRACKING = false
-  endflag   = DEPLOY = false
+  //endflag   = RETURN = true
+  endflag   = TRACK = false
+  endflag   = WAIT = true
+
+  //endflag   = DEPLOY = false
 	endflag   = SUMMARY=speed=$[SPEED],time=$[DUR_RUN_TIME]
 
   idleflag  = TRACKING = false
 	
 	configflag = CRUISE_SPD = $[SPEED]
 
+  activeflag = TRACK = true
 	activeflag = INFO=$[OWNSHIP]
 	activeflag = INFO=$[BHVNAME]
 	activeflag = INFO=$[BHVTYPE]
@@ -61,12 +71,12 @@ Behavior = BHV_Waypoint
                speed = 3   // meters per second
         capture_line = true
       capture_radius = 5.0
-         slip_radius = 15.0
+         slip_radius = 1.0
 	efficiency_measure = all
 
               point = $(START_POS)
                order = normal
-             repeat  = forever
+             repeat  = 1
 
     visual_hints = nextpt_color=yellow
     visual_hints = nextpt_vertex_size=8
