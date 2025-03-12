@@ -33,7 +33,6 @@ set MODE = TRAILING {
   PATROL = true
   TRAILING_ALLOWED = true
   TRAIL  = true
-  OUTOFB = false
 } 
 
 //----------------------------------------------
@@ -117,13 +116,13 @@ Behavior = BHV_AvoidCollision
 }
 
 //----------------------------------------------
-Behavior = BHV_Trail
+Behavior = BHV_NewTrail
 {
   name       = trail_contact
   pwt        = 100
   condition  = (MODE == TRAILING) or (MODE == PATROLLING)
   condition  = TRAILING_ALLOWED = true
-  condition  = OUTOFB = false
+  condition  = OUTOFB == false
   runflag    = TRAIL = true
   idleflag   = TRAIL = false
   endflag    = RETURN = true
@@ -137,7 +136,7 @@ Behavior = BHV_Trail
           trail_angle = 135
           trail_range = 5
            match_name = shoresideproxy
-         match_region = radial:: x=20, y=30, radius=20, pts=8, snap=1, label=RAVEN_REG
+         match_region = pts={10,50:200,70:200,-100:-50,-25}
 exit_on_filter_region = true
 
      trail_angle_type = relative
@@ -152,6 +151,7 @@ Behavior = BHV_SimpleDepth
 {
   name      = depth_survey
   pwt       = 100
+  condition = MODE == ACTIVE
   updates = SURVEY_DEPTH
   duration  = no-time-limit
 

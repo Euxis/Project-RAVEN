@@ -25,7 +25,7 @@ ENDIF()
 ADD_SUBDIRECTORY(pMoosKiller)
 ADD_SUBDIRECTORY(uSimpleRobot)
 ADD_SUBDIRECTORY(lib_bhvSimpleDepth)
-ADD_SUBDIRECTORY(lib_bhvSimpleMidpoint)
+ADD_SUBDIRECTORY(lib_bhvNewTrail)
 IF(BUILD_WOLFSSL)
   ADD_SUBDIRECTORY(pWolfEncrypt)
   ADD_SUBDIRECTORY(pWolfDecrypt)
@@ -34,4 +34,3 @@ ENDIF()
 ##############################################################################
 #                           END of CMakeLists.txt
 ##############################################################################
-

@@ -119,7 +119,7 @@ ProcessConfig = pHelmIvP
   domain       = speed:0:5:26
   domain       = depth,-200:0:4000:optional
 
-  ivp_behavior_dir = /home/aiden/RAVEN/Project-RAVEN/lib
+  ivp_behavior_dir = /Users/declanandrews/moos-ivp-extend/lib
 
   
 }
