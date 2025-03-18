@@ -143,8 +143,8 @@ ProcessConfig = uProcessWatch
 //----------------------------------------------------------------------------
 ProcessConfig = uSimpleRobot
 {
-  AppTick   = 8
-  CommsTick = 16
+  AppTick   = 2
+  CommsTick = 2
 
   start_heading = 0.0   //degrees
   start_speed   = 0.0   //meters per sec
@@ -234,7 +234,7 @@ ProcessConfig = pHelmIvP
   domain       = speed:0:5:26
   domain       = depth,-200:0:4000:optional
 
-  ivp_behavior_dir = /home/aiden/RAVEN/Project-RAVEN/lib
+  ivp_behavior_dir = /Users/declanandrews/moos-ivp-extend/lib
 
   
 }
