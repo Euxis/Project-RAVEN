@@ -27,11 +27,12 @@
 #include <string>
 #include "IvPContactBehavior.h"
 #include "IvPDomain.h"
+#include "IvPBehavior.h"
 
 class IvPDomain;
 class BHV_NewTrail : public IvPContactBehavior {
 public:
-  BHV_NewTrail(IvPDomain domain);
+  BHV_NewTrail(IvPDomain);
   ~BHV_NewTrail() {}
   
   IvPFunction* onRunState();
@@ -65,5 +66,13 @@ private: // Configuration parameters
 
   bool    m_no_alert_request;
 };
+
+
+#define IVP_EXPORT_FUNCTION
+
+extern "C" {
+  IVP_EXPORT_FUNCTION IvPBehavior * createBehavior(std::string name, IvPDomain domain)
+{return new BHV_NewTrail(domain);}
+}
 #endif
 
