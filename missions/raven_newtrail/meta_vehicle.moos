@@ -1,0 +1,217 @@
+ServerHost = localhost
+ServerPort = $(VPORT)
+
+// Community name IS the vehicle name
+Community  = $(VNAME)
+  
+#include plug_origin_warp.moos
+#include plug_uTimerScript.moos
+   
+//------------------------------------------------------------
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 100
+   
+  Run = MOOSDB            @ NewConsole = false
+
+#ifndef KNOWS_CONTACTS
+  Run = uSimMarineV22     @ NewConsole = false
+#endif
+
+  Run = pLogger           @ NewConsole = false
+  Run = pNodeReporter     @ NewConsole = false
+  Run = pMarinePIDV22     @ NewConsole = false
+  Run = pHelmIvP          @ NewConsole = false
+  Run = uProcessWatch     @ NewConsole = false
+
+  Run = pShare             @ NewConsole = false
+  Run = pHostInfo          @ NewConsole = false
+  Run = uFldNodeBroker     @ NewConsole = false
+  Run = uFldMessageHandler @ NewConsole = false
+  Run = uTimerScript       @ NewConsole = false
+#ifdef KNOWS_CONTACTS
+  Run = pContactMgrV20  @ NewConsole = false
+  Run = uSimpleRobot    @ NewConsole = false
+#endif
+}
+
+#include plug_pShare.moos
+#include plug_pHostInfo.moos
+#include plug_pLogger.moos
+#include plug_uProcessWatch.moos
+
+#ifdef KNOWS_CONTACTS
+  #include plug_uSimpleRobot.moos
+#endif
+
+//--------------------------------------------------
+// uFldNodeBroker config block
+
+ProcessConfig = uFldNodeBroker
+{
+  AppTick   = 1
+  CommsTick = 1
+
+  
+  try_shore_host = pshare_route=localhost:$(SHORE_LISTEN)
+
+  bridge = src=VIEW_POLYGON
+  bridge = src=VIEW_POINT
+  bridge = src=VIEW_SEGLIST
+  bridge = src=VIEW_CIRCLE
+  bridge = src=APPCAST
+  bridge = src=NODE_REPORT_LOCAL,  alias=NODE_REPORT
+  bridge = src=NODE_MESSAGE_LOCAL, alias=NODE_MESSAGE
+}
+
+	//---------------------------------------
+ProcessConfig = pMarinePIDV22
+{
+  AppTick    = 10
+  CommsTick  = 10
+  
+  VERBOSE       = true
+  DEPTH_CONTROL = false
+  ACTIVE_START  = true
+  
+  // Yaw PID controller
+  YAW_PID_KP             = 0.4
+  YAW_PID_KD             = 0.1
+  YAW_PID_KI             = 0.0
+  YAW_PID_INTEGRAL_LIMIT = 0.07
+  
+  // Speed PID controller
+  SPEED_PID_KP           = 1.0
+  SPEED_PID_KD           = 0.0
+  SPEED_PID_KI           = 0.0
+  SPEED_PID_INTEGRAL_LIMIT = 0.07
+  
+  // Maximums
+  MAXRUDDER  = 100
+  MAXTHRUST  = 100
+  
+  // A non-zero SPEED_FACTOR overrides use of SPEED_PID
+  // Will set DESIRED_THRUST = DESIRED_SPEED * SPEED_FACTOR
+  SPEED_FACTOR = 20
+}
+
+
+//------------------------------------------
+ProcessConfig = uSimMarineV22
+{
+  AppTick   = 10
+  CommsTick = 10
+
+  start_pos = $(START_POS)
+  prefix    = NAV
+}
+
+
+//---------------------------------------
+ProcessConfig = pHelmIvP
+{
+  AppTick    = 2
+  CommsTick  = 2
+  
+  behaviors    = targ_$(VNAME).bhv
+  verbose      = true
+  domain       = course:0:359:360
+  domain       = speed:0:5:26
+  domain       = depth,-200:0:4000:optional
+
+  ivp_behavior_dir = /home/aiden/RAVEN/Project-RAVEN/lib
+
+  
+}
+
+//--------------------------------------------------
+// uFldMessageHandler config block
+
+ProcessConfig = uFldMessageHandler
+{
+  AppTick   = 3
+  CommsTick = 3
+
+  strict_addressing = false
+}
+
+//---------------------------------------
+ProcessConfig = pNodeReporter
+{
+  AppTick     = 2
+  CommsTick   = 2
+  
+  platform_type = $(VTYPE)
+}
+
+//---------------------------------------
+// pBasicContactMgr Config Block 
+
+ProcessConfig = pContactMgrV20
+{
+  AppTick   = 2
+  CommsTick = 2
+
+  contact_max_age = 3600
+  display_radii   = false
+
+	decay = 30,60
+	alert_verbose = false
+
+
+  //default_alert_range = 20
+  //default_cpa_range   = 28
+  //default_alert_range_color = gray70
+  //default_cpa_range_color   = gray30
+
+  //alert = id=avd, var=CONTACT_INFO, val="name=$[VNAME] # contact=$[VNAME]"
+  //alert = id=avd, alert_range=50, cpa_range=60, alert_range_color=yellow
+  //alert = id=avd, cpa_range_color=pink
+
+  alert = id=trail, var=TRAIL_INFO, val="name=$[VNAME] # contact=$[VNAME]"
+  //alert = id=trail, alert_range=140, cpa_range=185, alert_range_color=green
+  alert = id=trail, alert_range=140, cpa_range=185
+  //alert = id=trail, cpa_range_color=white
+}
+
+//---------------------------------------------------------
+// pShare Config Block 
+
+ProcessConfig = pShare
+{
+  AppTick    = 2
+  CommsTick  = 2
+
+
+  input = route = 134.88.137.67:$(SHARE_LISTEN)
+
+#ifdef KNOWS_CONTACTS
+  output = src_name=DEPLOY, dest_name=DEPLOY, route=134.88.137.67:$(VPORT2)
+  //output = src_name=TRACK, route=localhost:$(VPORT3)
+  //output = DEPLOY -> 134.88.137.67:$(VPORT2)
+#endif
+
+  // =======================================================
+  // Usage Info below
+  // =======================================================
+
+  // Simple forward of X to A on channel 8
+  // output = src_name = X,dest_name=A, route=multicast_8
+ 
+  // Simple forward of Y to B on a udp address
+
+  //output = src_name=Y, dest_name=B, route=localhost:9300
+ 
+  // Simple forward of Z to Z on a named address (no renaming)
+  // output = src_name = Z, route = oceanai.mit.edu:9020
+ 
+  // Setting up an input
+  // input = route = multicast_9
+  
+  //input = route = localhost:9301 & multicast_9
+
+ 
+  // Setting up lots of inputs at once
+  // input = route = "localhost:9069 & multicast_19 & multicast_65"
+}
+	
