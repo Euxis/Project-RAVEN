@@ -12,26 +12,31 @@
 
 #include "VarDataPair.h"
 #include "IvPContactBehavior.h"
+#include "IvPBehavior.h"
 
+class IvPDomain;
 class BHV_SimpleMidpoint : public IvPContactBehavior {
 public:
   BHV_SimpleMidpoint(IvPDomain);
   ~BHV_SimpleMidpoint() {};
   
   bool         setParam(std::string, std::string);
-  void         onSetParamComplete();
-  void         onCompleteState();
   void         onIdleState();
   void         onHelmStart();
-  void         postConfigStatus();
-  void         onRunToIdleState();
-  void         onIdleToRunState();
   IvPFunction* onRunState();
 
 protected: // Local Utility functions
+double updateMidpointDistance();
+void calculateMidpoint();
+void postViewableMidpoint();
 
 protected: // Configuration parameters
   double m_comm_radius;   // The communication radius of ownship
+  double m_station_point_x;
+  double m_station_point_y;
+  double m_midpoint_x;
+  double m_midpoint_y;
+
 
 protected: // State variables
 };

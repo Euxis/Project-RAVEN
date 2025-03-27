@@ -30,8 +30,7 @@ set MODE = PATROLLING {
 
 set MODE = TRAILING {
   MODE   = ACTIVE
-  PATROL = true
-  TRAILING_ALLOWED = true
+  PATROL = false
   TRAIL  = true
 } 
 
@@ -56,64 +55,83 @@ Behavior = BHV_Loiter
 
 //----------------------------------------------
 // RETURN BEHAVIOR
-Behavior = BHV_Waypoint
-{
-  name      = waypt_return
-  pwt       = 100
-  updates   = RETURN_UPDATES
-  condition = MODE == RETURNING
+
+// Behavior = BHV_Waypoint
+// {
+//   name      = waypt_return
+//   pwt       = 100
+//   updates   = RETURN_UPDATES
+//   condition = MODE == RETURNING
   
 
-      speed = 1.3
-     radius = 3.0
-  nm_radius = 15.0
-     points = $(START_POS)
-     repeat = 10
-       lead = 8
-}
+//       speed = 1.3
+//      radius = 3.0
+//   nm_radius = 15.0
+//      points = $(START_POS)
+//      repeat = 10
+//        lead = 8
+// }
 
-//----------------------------------------------
-Behavior = BHV_StationKeep
+Behavior = BHV_SimpleMidpoint
 {
-  name      = station-keep
+  name      = simple_midpoint
   pwt       = 100
-  condition = MODE == STATION-KEEPING
+  condition = MODE == PATROLLING
 
-     center_activate = true
-        inner_radius = 5
-        outer_radius = 10 
-         outer_speed = 1.0
+  activeflag = TRAIL = true
+  activeflag = PATROL = false
+  
+  endflag   = PATROL = true
+  updates   = STATION_UPDATE
 
-       transit_speed = 1.3
-          swing_time = 7
-  hibernation_radius = 25
-        visual_hints = vertex_size=0, edge_color=blue
+  comm_radius = 20
+  station_point_x = 0
+  station_point_y = 0
+
 }
+
+// //----------------------------------------------
+// Behavior = BHV_StationKeep
+// {
+//   name      = station-keep
+//   pwt       = 100
+//   condition = MODE == STATION-KEEPING
+
+//      center_activate = true
+//         inner_radius = 5
+//         outer_radius = 10 
+//          outer_speed = 1.0
+
+//        transit_speed = 1.3
+//           swing_time = 7
+//   hibernation_radius = 25
+//         visual_hints = vertex_size=0, edge_color=blue
+// }
 
 
 //----------------------------------------------
-Behavior = BHV_AvoidCollision
-{
-  name       = avd_collision
-  pwt        = 50
-  condition  = MODE == ACTIVE
-  condition  = MODE != STATION-KEEPING
-  updates    = CONTACT_INFO
-  endflag    = CONTACT_RESOLVED = $[CONTACT],avd 
-  templating = spawn
+// Behavior = BHV_AvoidCollision
+// {
+//   name       = avd_collision
+//   pwt        = 50
+//   condition  = MODE == ACTIVE
+//   condition  = MODE != STATION-KEEPING
+//   updates    = CONTACT_INFO
+//   endflag    = CONTACT_RESOLVED = $[CONTACT],avd 
+//   templating = spawn
 
-              contact = to-be-set
-       pwt_outer_dist = 50
-       pwt_inner_dist = 20
-       completed_dist = 145
-    min_util_cpa_dist = 8
-   max_util_cpa_dist = 25
-//         active_grade = linear
-     on_no_contact_ok = true
-          extrapolate = true
-                decay = 30,60
-  bearing_line_config = white:0, green:0.65, yellow:0.8, red:1.0
-}
+//               contact = to-be-set
+//        pwt_outer_dist = 50
+//        pwt_inner_dist = 20
+//        completed_dist = 145
+//     min_util_cpa_dist = 8
+//    max_util_cpa_dist = 25
+// //         active_grade = linear
+//      on_no_contact_ok = true
+//           extrapolate = true
+//                 decay = 30,60
+//   bearing_line_config = white:0, green:0.65, yellow:0.8, red:1.0
+// }
 
 //----------------------------------------------
 

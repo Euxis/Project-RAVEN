@@ -42,7 +42,7 @@ TRAIL_ANGLE1="135"
 nsplug meta_vehicle.moos targ_$VNAME1.moos -f WARP=$TIME_WARP \
    VNAME=$VNAME1      START_POS=$START_POS1                 \
    VPORT="9001"       SHARE_LISTEN="9301"                   \
-   VTYPE="glider"     SHORE_LISTEN=$SHORE_LISTEN            \
+   VTYPE="auv"     SHORE_LISTEN=$SHORE_LISTEN            \
    VNAME2=$VNAME2     VPORT2=$VPORT2                         \
    KNOWS_CONTACTS=1   DEPLOY_HGILDA="false"
 
@@ -56,7 +56,7 @@ nsplug meta_vehicle.moos targ_$VNAME2.moos -f WARP=$TIME_WARP \
 nsplug meta_vehicle.moos targ_$VNAME3.moos -f WARP=$TIME_WARP \
    VNAME=$VNAME3      START_POS=$START_POS3                 \
    VPORT="9003"       SHARE_LISTEN=$VPORT3                   \
-   VTYPE="kayak"      SHORE_LISTEN=$SHORE_LISTEN
+   VTYPE="ship"      SHORE_LISTEN=$SHORE_LISTEN
 
 # SHORESIDE
 nsplug meta_shoreside.moos targ_shoreside.moos -f WARP=$TIME_WARP \
