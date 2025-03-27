@@ -26,7 +26,6 @@
 
 #include <string>
 #include "IvPContactBehavior.h"
-#include "IvPDomain.h"
 #include "IvPBehavior.h"
 
 class IvPDomain;

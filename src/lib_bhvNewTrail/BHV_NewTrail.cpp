@@ -423,8 +423,5 @@ void BHV_NewTrail::calculateTrailPoint()
     projectPoint(m_trail_angle, m_trail_range, m_cnx, m_cny, m_trail_pt_x, m_trail_pt_y);
 
 }
-<<<<<<< HEAD
-=======
 
 
->>>>>>> main
