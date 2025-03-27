@@ -62,8 +62,8 @@ ProcessConfig = uFldNodeComms
   AppTick       = 2
   CommsTick     = 2
 
-           comms_range = 10
-        critical_range = 10
+           comms_range = 1000
+        critical_range = 1000
       min_msg_interval = 20
         max_msg_length = 1000
 
@@ -117,12 +117,13 @@ ProcessConfig = pMarineViewer
   button_one   = MOOS_MANUAL_OVERRIDE_ALL=false 
   button_one   = RETURN_ALL=false 
   button_one   = PATROL=true
+  button_one   = TRAIL=false
 
-  button_two   = RETURN  # RETURN_ALL=true # PATROL=false
-  button_two   = PATROL=false # TRAIL=false
+  button_two   = RETURN  # RETURN_ALL=true # PATROL=false # TRAIL=false # STATION_KEEP = true
 
-  button_three = TRAIL-YES # PATROL=true # TRAILING_ALLOWED=true
-  button_four = TRAIL-NO # TRAILING_ALLOWED=false
+
+  button_three = TRAIL-YES # TRAIL=true # PATROL=false # TRAILING_ALLOWED=true # STATION_KEEP = false # RETURN=false
+  button_four = TRAIL-NO # TRAIL=false # PATROL=true # TRAILING_ALLOWED=false # STATION_KEEP = false # RETURN=false
 }
 
 //--------------------------------------------------------
