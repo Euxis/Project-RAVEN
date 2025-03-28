@@ -38,13 +38,29 @@ VPORT3="9303"
 TRAIL_RANGE1="5"
 TRAIL_ANGLE1="135"
 
+# TEST
+TRAIL_RANGE2="10"         # For alpha
+TRAIL_ANGLE2="90"
+
 # RAVEN
+#nsplug meta_vehicle.moos targ_$VNAME1.moos -f WARP=$TIME_WARP \
+#   VNAME=$VNAME1      START_POS=$START_POS1                 \
+#   VPORT="9001"       SHARE_LISTEN="9301"                   \
+#   VTYPE="glider"     SHORE_LISTEN=$SHORE_LISTEN            \
+#   VNAME2=$VNAME2     VPORT2=$VPORT2                         \
+#   VNAME=$VNAME3                                            \
+#   KNOWS_CONTACTS=2   DEPLOY_HGILDA="false"
+
+#TEST RAVEN
 nsplug meta_vehicle.moos targ_$VNAME1.moos -f WARP=$TIME_WARP \
-   VNAME=$VNAME1      START_POS=$START_POS1                 \
-   VPORT="9001"       SHARE_LISTEN="9301"                   \
-   VTYPE="glider"     SHORE_LISTEN=$SHORE_LISTEN            \
-   VNAME2=$VNAME2     VPORT2=$VPORT2                         \
-   KNOWS_CONTACTS=1   DEPLOY_HGILDA="false"
+   VNAME=$VNAME1       START_POS=$START_POS1                  \
+   VPORT="9001"        SHARE_LISTEN="9301"                    \
+   VTYPE="glider"      SHORE_LISTEN=$SHORE_LISTEN             \
+   CONTACT1=$VNAME2    CONTACT1_PORT=$VPORT2                  \
+   CONTACT2=$VNAME3    CONTACT2_PORT=$VPORT3                  \
+   CONTACT1_START_POS=$START_POS2                             \
+   CONTACT2_START_POS=$START_POS3                             \
+   KNOWS_CONTACTS=2     DEPLOY_HGILDA="false"
 
 # SHORESIDE PROXY/GCS
 nsplug meta_vehicle.moos targ_$VNAME2.moos -f WARP=$TIME_WARP \
@@ -64,10 +80,17 @@ nsplug meta_shoreside.moos targ_shoreside.moos -f WARP=$TIME_WARP \
    SPORT="9000"       HENRY=$VNAME1 GILDA=$VNAME2 ALPHA=$VNAME3
 
 # RAVEN BEHAVIOR FILE
+#nsplug meta_$VNAME1.bhv targ_$VNAME1.bhv -f VNAME=$VNAME1  \
+#    OVNAME=$VNAME2 START_POS=$START_POS2  \
+#    TRAIL_RANGE=$TRAIL_RANGE1              \
+#    TRAIL_ANGLE=$TRAIL_ANGLE1
+
+#DUAL CONTACT RAVEN BEHAVIOR FILE TEST
 nsplug meta_$VNAME1.bhv targ_$VNAME1.bhv -f VNAME=$VNAME1  \
-    OVNAME=$VNAME2 START_POS=$START_POS2  \
-    TRAIL_RANGE=$TRAIL_RANGE1              \
-    TRAIL_ANGLE=$TRAIL_ANGLE1
+    OVNAME1=$VNAME2 START_POS=$START_POS2  \
+    OVNAME2=$VNAME3 START_POS=$START_POS3 \
+    TRAIL_RANGE1=$TRAIL_RANGE1 TRAIL_ANGLE1=$TRAIL_ANGLE1 \
+    TRAIL_RANGE2=$TRAIL_RANGE2 TRAIL_ANGLE2=$TRAIL_ANGLE2
 
 # SHORESIDE PROXY BEHAVIOR FILE
 nsplug meta_$VNAME2.bhv targ_$VNAME2.bhv -f VNAME=$VNAME2  \

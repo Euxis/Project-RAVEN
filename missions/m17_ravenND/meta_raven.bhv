@@ -50,6 +50,7 @@ Behavior = BHV_Loiter
   visual_hints = nextpt_color=white, nextpt_lcolor=khaki
   visual_hints = edge_color=blue, vertex_color=blue
   visual_hints = edge_size=1, vertex_size=2
+  perpetual  = true
 }
 
 
@@ -116,36 +117,22 @@ Behavior = BHV_AvoidCollision
   bearing_line_config = white:0, green:0.65, yellow:0.8, red:1.0
 }
 
-//----------------------------------------------
+//----------------------------------------------------------------------------TEST
 Behavior = BHV_NewTrail
 {
-  name       = trail_contact
-  pwt        = 100
-  condition  = (MODE == TRAILING)
-  condition  = DEPLOY = true
-  //condition  = OUTOFB == false
-  runflag    = TRAIL = true
-  idleflag   = TRAIL = true//change
-  endflag    = TRAIL = true//change
-  updates    = TRAIL_INFO
-  templating = spawn
-  //perpetual  = true
+  name        = trail_midpoint
+  pwt         = 100
+  updates     = TRAIL_INFO
 
-              contact = to-be-set
-       pwt_outer_dist = 800 //change
-            nm_radius = 18
-               radius = 8
-          trail_angle = $(TRAIL_ANGLE)
-          trail_range = $(TRAIL_RANGE)
-           match_name = shoresideproxy
-         match_region = pts={10,50:200,70:200,-100:-50,-25}
-exit_on_filter_region = true
+  contact     = ${CONTACT1}  // shoresideproxy
+  contact2    = ${CONTACT2}  // alpha
+  
+  // Trail parameters
+  trail_range = 5      // From launch.sh TRAIL_RANGE1
+  trail_angle = 135    // From launch.sh TRAIL_ANGLE1
+  radius      = 8
+  nm_radius   = 18
 
-     trail_angle_type = relative
-     on_no_contact_ok = true
-          extrapolate = true
-                decay = 30,60
-  bearing_line_config = white:0, green:0.65, yellow:0.8, red:1.0
 }
 
 //----------------------------------------------------------------------------

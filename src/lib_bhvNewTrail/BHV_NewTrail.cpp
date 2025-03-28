@@ -59,8 +59,21 @@ BHV_NewTrail::BHV_NewTrail(IvPDomain gdomain) : IvPContactBehavior(gdomain)
 
   m_no_alert_request = true;
   m_min_trail_range  = 10;
+    
+    //TEST
+    m_contact_name = "";
+    m_contact2_name = "";
+    m_contact2_cnx = 0;
+    m_contact2_cny = 0;
+    m_both_contacts_valid = false;
   
-  addInfoVars("NAV_X, NAV_Y, NAV_SPEED, NAV_HEADING");
+//  addInfoVars("NAV_X, NAV_Y, NAV_SPEED, NAV_HEADING, NAV_DEPTH");
+//    
+//  addInfoVars("NAV2_X, NAV2_Y, NAV2_SPEED, NAV2_HEADING, NAV_DEPTH");
+    
+    //TEST
+    addInfoVars("NAV_ALPHA_X, NAV_ALPHA_Y, NAV_ALPHA_HEADING");
+    addInfoVars("NAV_SHORESIDEPROXY_X, NAV_SHORESIDEPROXY_Y");
 }
 
 //-----------------------------------------------------------
@@ -75,10 +88,25 @@ BHV_NewTrail::BHV_NewTrail(IvPDomain gdomain) : IvPContactBehavior(gdomain)
 
 bool BHV_NewTrail::setParam(string param, string param_val) 
 {
+    
+    
   if(IvPContactBehavior::setParam(param, param_val))
     return(true);
   
   double dval = atof(param_val.c_str());
+    
+    //TEST
+    if (param == "contact") {
+      // Let base class handle primary contact
+      IvPContactBehavior::setParam(param, param_val);
+      m_contact_name = param_val; // No toupper()!
+      return true;
+    }
+    else if (param == "contact2") {
+      m_contact2_name = toupper(param_val);
+      addInfoVars("NAV_" + m_contact2_name + "_X, NAV_" + m_contact2_name + "_Y");
+      return true;
+    }
 
   if(param == "nm_radius")
     return(setNonNegDoubleOnString(m_nm_radius, param_val));
@@ -184,9 +212,44 @@ IvPFunction *BHV_NewTrail::onRunState()
   if(m_extrapolate && m_extrapolator.isDecayMaxed())
     return(0);
 
-  calculateTrailPoint();
-  postViewableTrailPoint();
 
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//RAVEN Development Zone
+    
+    bool contact1_ok = getContactPosition(m_contact_name, m_cnx, m_cny);
+    bool contact2_ok = getContactPosition(m_contact2_name, m_contact2_cnx, m_contact2_cny);
+    
+    m_both_contacts_valid = (contact1_ok && contact2_ok);
+    
+    //checks for depth domain in helm if none returns 0
+    if(!m_domain.hasDomain("depth")) {
+      postEMessage("No 'depth' variable in the helm domain");
+      return(0);
+    }
+    
+    // Update primary contact (built-in)
+    if(!updatePlatformInfo())
+      return 0;
+
+    // Manually update secondary contact
+    bool ok2 = getContactPosition(m_contact2_name, m_contact2_cnx, m_contact2_cny);
+    if(!ok2) {
+      postWMessage("No contact2 info: " + m_contact2_name);
+      return 0;
+    }
+    
+    
+    
+    
+    
+    
+    
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+    calculateTrailPoint();
+    postViewableTrailPoint();
+    
   // double adjusted_angle = angle180(m_cnh + m_trail_angle);
   // projectPoint(adjusted_angle, m_trail_range, m_cnx,
   //              m_cny, m_trail_pt_x, m_trail_pt_y);
@@ -357,6 +420,21 @@ void BHV_NewTrail::onIdleState()
     updateTrailDistance();
 }
 
+
+//-----------------------------------------------------------TEST
+// Procedure: getContactPosition()
+bool BHV_NewTrail::getContactPosition(const std::string& contact, double& x, double& y)
+{
+    string x_var = "NAV_" + contact + "_X";
+    string y_var = "NAV_" + contact + "_Y";
+    
+    bool ok_x, ok_y;
+    x = getBufferDoubleVal(x_var, ok_x);
+    y = getBufferDoubleVal(y_var, ok_y);
+
+    return (ok_x && ok_y);
+}
+
 //-----------------------------------------------------------
 // Procedure: getRelevance()
 
@@ -365,6 +443,10 @@ double BHV_NewTrail::getRelevance()
   // For now just return 1.0 if within max_range. But we could 
   // imagine that we would reduce its relevance (linearly perhaps) 
   // if the vehicle were already in a good position.
+    
+    //TEST
+    if(!m_both_contacts_valid)
+      return 0.0; // Deactivate trail behavior, triggering patrol
   
   if(m_pwt_outer_dist == 0)
     return(1.0);
@@ -412,7 +494,7 @@ double BHV_NewTrail::updateTrailDistance()
 void BHV_NewTrail::calculateTrailPoint()
 {
   // Calculate the trail point based on trail_angle, trail_range.
-  //  double m_trail_pt_x, m_trail_pt_y; 
+  /*double m_trail_pt_x, m_trail_pt_y;
   
   if(m_angle_relative) {
     double abs_angle = headingToRadians(angle360(m_cnh+m_trail_angle));
@@ -421,5 +503,30 @@ void BHV_NewTrail::calculateTrailPoint()
   }
   else 
     projectPoint(m_trail_angle, m_trail_range, m_cnx, m_cny, m_trail_pt_x, m_trail_pt_y);
+    */
+    
+    //calc mid-point between shoreside and UUV ROBBIES CODE
+//    m_trail_pt_x = (20/*shoreside_x*/ + m_cnx/*uuv_x*/) / 2.0;
+//    m_trail_pt_y = (30/*shoreside_y*/ + m_cny/*uuv_y*/) / 2.0;
+    
+    /*
+     when alpha reaches edge of RAVEN range, RAVEN will lower its altitude to extend the range of its com range. It will sit at -50m until alpha reaches edge of comms range.
+     */
+    
+    // Get positions for both contacts
+    bool contact1_ok = getContactPosition(m_contact_name, m_cnx, m_cny);
+    bool contact2_ok = getContactPosition(m_contact2_name, m_contact2_cnx, m_contact2_cny);
+
+    if(contact1_ok && contact2_ok) {
+      // Calculate midpoint
+      m_trail_pt_x = (m_cnx + m_contact2_cnx) / 2.0;
+      m_trail_pt_y = (m_cny + m_contact2_cny) / 2.0;
+    }
+    else {
+      // Fallback: Use shoresideproxy's position directly
+      m_trail_pt_x = m_cnx;
+      m_trail_pt_y = m_cny;
+    }
 
 }
+

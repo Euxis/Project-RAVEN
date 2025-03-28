@@ -119,7 +119,7 @@ ProcessConfig = pHelmIvP
   domain       = speed:0:5:26
   domain       = depth,-200:0:4000:optional
 
-  ivp_behavior_dir = /home/zach/Project-RAVEN/lib
+  ivp_behavior_dir = /Users/declanandrews/Project-RAVEN/lib
 
   
 }
@@ -142,6 +142,7 @@ ProcessConfig = pNodeReporter
   CommsTick   = 2
   
   platform_type = $(VTYPE)
+
 }
 
 //---------------------------------------
@@ -159,6 +160,18 @@ ProcessConfig = pContactMgrV20
 	alert_verbose = false
 
 
+  //TEST
+  //alert = id=midpoint, var=TRAIL_INFO, val="name=$[VNAME] # contact1=${CONTACT1} # contact2=${CONTACT2}"
+  //alert = id=midpoint, alert_range=140, cpa_range=185
+
+  alert = id=track_shoreside, var=CONTACT_SHORESIDEPROXY, 
+          match_condition=name=shoresideproxy,
+          alert_range=140, cpa_range=185
+
+  alert = id=track_alpha, var=CONTACT_ALPHA,
+          match_condition=name=alpha,
+          alert_range=140, cpa_range=185
+
   //default_alert_range = 20
   //default_cpa_range   = 28
   //default_alert_range_color = gray70
@@ -168,9 +181,14 @@ ProcessConfig = pContactMgrV20
   //alert = id=avd, alert_range=50, cpa_range=60, alert_range_color=yellow
   //alert = id=avd, cpa_range_color=pink
 
-  alert = id=trail, var=TRAIL_INFO, val="name=$[VNAME] # contact=$[VNAME]"
+// old alert below
+  //alert = id=trail, var=TRAIL_INFO, val="name=$[VNAME] # contact=$[VNAME]"
+
   //alert = id=trail, alert_range=140, cpa_range=185, alert_range_color=green
-  alert = id=trail, alert_range=140, cpa_range=185
+
+// old alert below
+  //alert = id=trail, alert_range=140, cpa_range=185
+
   //alert = id=trail, cpa_range_color=white
 }
 

@@ -42,6 +42,9 @@ public:
   void         onHelmStart();
 
 protected:
+    //TEST
+  bool getContactPosition(const std::string& contact, double& x, double& y);
+    
   double  getRelevance();
   double  getPriority();
 
@@ -65,6 +68,13 @@ private: // Configuration parameters
   bool    m_post_trail_dist_on_idle;
 
   bool    m_no_alert_request;
+    
+//TEST
+    std::string m_contact_name;
+    std::string m_contact2_name;
+    double      m_contact2_cnx;  // Use same naming convention
+    double      m_contact2_cny;
+    bool        m_both_contacts_valid; // Track if both contacts are valid
 };
 
 

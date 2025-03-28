@@ -412,7 +412,7 @@ double BHV_NewTrail::updateTrailDistance()
 void BHV_NewTrail::calculateTrailPoint()
 {
   // Calculate the trail point based on trail_angle, trail_range.
-  /*double m_trail_pt_x, m_trail_pt_y;
+  //  double m_trail_pt_x, m_trail_pt_y; 
   
   if(m_angle_relative) {
     double abs_angle = headingToRadians(angle360(m_cnh+m_trail_angle));
@@ -421,15 +421,5 @@ void BHV_NewTrail::calculateTrailPoint()
   }
   else 
     projectPoint(m_trail_angle, m_trail_range, m_cnx, m_cny, m_trail_pt_x, m_trail_pt_y);
-    */
-    
-    //calc mid-point between shoreside and UUV
-    m_trail_pt_x = (20/*shoreside_x*/ + m_cnx/*uuv_x*/) / 2.0;
-    m_trail_pt_y = (30/*shoreside_y*/ + m_cny/*uuv_y*/) / 2.0;
-    
-    /*
-     when alpha reaches edge of RAVEN range, RAVEN will lower its altitude to extend the range of its com range. It will sit at -50m until alpha reaches edge of comms range.
-     */
 
 }
-
