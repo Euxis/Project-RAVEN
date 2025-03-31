@@ -5,7 +5,7 @@ ServerHost = localhost
 ServerPort = 9000
 Community  = shoreside
 
-MOOSTimeWarp = 5
+MOOSTimeWarp = 7
 LatOrigin  = 43.825300 
 LongOrigin = -70.330400 
 
@@ -162,7 +162,7 @@ ProcessConfig = pMarineViewer
   left_context[] = TRACK = true
 
   // updates station point for RAVEN
-  right_context[] = STATION_UPDATE_RAVEN = "station_point_x = $[XPOS] # station_point_y = $[YPOS]"
+  right_context[] = RETURN_UPDATE_RAVEN = "station_point_x = $[XPOS] # station_point_y = $[YPOS]"
   // Place a marker down on the map to represent GCS
   right_context[] = VIEW_MARKER  = "type=efield,x=$[XPOS],y=$[YPOS],scale=4.3,label=alpha,color=red,width=4.5"
   // update station position
@@ -183,8 +183,8 @@ ProcessConfig = pMarineViewer
 //--------------------------------------------------------
 ProcessConfig = uXMS
 {
-  AppTick    = 5
-  CommsTick  = 5
+  AppTick    = 4
+  CommsTick  = 4
 
   var  = NODE_REPORT
   var  = VIEW_POLYGON

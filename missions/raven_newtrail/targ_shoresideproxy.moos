@@ -4,7 +4,7 @@ ServerPort = 9002
 // Community name IS the vehicle name
 Community  = shoresideproxy
   
-MOOSTimeWarp = 5
+MOOSTimeWarp = 7
 LatOrigin  = 43.825300 
 LongOrigin = -70.330400 
 

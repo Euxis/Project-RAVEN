@@ -76,7 +76,7 @@ Behavior = BHV_Waypoint
 
               point = 70,-125
                order = normal
-             repeat  = 1
+             repeat  = forever
 
     visual_hints = nextpt_color=yellow
     visual_hints = nextpt_vertex_size=8

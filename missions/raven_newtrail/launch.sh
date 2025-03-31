@@ -70,8 +70,8 @@ nsplug meta_$VNAME1.bhv targ_$VNAME1.bhv -f VNAME=$VNAME1  \
     TRAIL_ANGLE=$TRAIL_ANGLE1
 
 # SHORESIDE PROXY BEHAVIOR FILE
-nsplug meta_$VNAME2.bhv targ_$VNAME2.bhv -f VNAME=$VNAME2  \
-    OVNAME=$VNAME1 START_POS=$START_POS1
+# nsplug meta_$VNAME2.bhv targ_$VNAME2.bhv -f VNAME=$VNAME2  \
+#     OVNAME=$VNAME1 START_POS=$START_POS1
 
 # ALPHA BEHAVIOR FILE
 nsplug $VNAME3.bhv targ_$VNAME3.bhv -f VNAME=$VNAME3  \
@@ -87,9 +87,9 @@ fi
 printf "Launching $VNAME1 MOOS Community (WARP=%s) \n" $TIME_WARP
 pAntler targ_$VNAME1.moos >& /dev/null &
 sleep 0.25
-printf "Launching $VNAME2 MOOS Community (WARP=%s) \n" $TIME_WARP
-pAntler targ_$VNAME2.moos >& /dev/null &
-sleep 0.25
+# printf "Launching $VNAME2 MOOS Community (WARP=%s) \n" $TIME_WARP
+# pAntler targ_$VNAME2.moos >& /dev/null &
+# sleep 0.25
 printf "Launching $VNAME3 MOOS Community (WARP=%s) \n" $TIME_WARP
 pAntler targ_$VNAME3.moos >& /dev/null &
 sleep 0.25
