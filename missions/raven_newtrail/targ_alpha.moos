@@ -4,7 +4,7 @@ ServerPort = 9003
 // Community name IS the vehicle name
 Community  = alpha
   
-MOOSTimeWarp = 7
+MOOSTimeWarp = 5
 LatOrigin  = 43.825300 
 LongOrigin = -70.330400 
 
