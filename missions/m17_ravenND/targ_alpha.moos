@@ -4,7 +4,7 @@ ServerPort = 9003
 // Community name IS the vehicle name
 Community  = alpha
   
-MOOSTimeWarp = 5
+MOOSTimeWarp = 10
 LatOrigin  = 43.825300 
 LongOrigin = -70.330400 
 
@@ -215,7 +215,7 @@ ProcessConfig = pHelmIvP
   domain       = speed:0:5:26
   domain       = depth,-200:0:4000:optional
 
-  ivp_behavior_dir = /home/zach/Project-RAVEN/lib
+  ivp_behavior_dir = /Users/declanandrews/Project-RAVEN/lib
 
   
 }
