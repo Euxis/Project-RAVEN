@@ -409,17 +409,38 @@ double BHV_NewTrail::updateTrailDistance()
 //-----------------------------------------------------------
 // Procedure: calculateTrailPoint()
 
+//void BHV_NewTrail::calculateTrailPoint()
+//{
+//  // Calculate the trail point based on trail_angle, trail_range.
+//  //  double m_trail_pt_x, m_trail_pt_y; 
+//  
+//  if(m_angle_relative) {
+//    double abs_angle = headingToRadians(angle360(m_cnh+m_trail_angle));
+//    m_trail_pt_x = m_cnx + m_trail_range*cos(abs_angle);
+//    m_trail_pt_y = m_cny + m_trail_range*sin(abs_angle);
+//  }
+//  else 
+//    projectPoint(m_trail_angle, m_trail_range, m_cnx, m_cny, m_trail_pt_x, m_trail_pt_y);
+//
+//}
+
 void BHV_NewTrail::calculateTrailPoint()
 {
-  // Calculate the trail point based on trail_angle, trail_range.
-  //  double m_trail_pt_x, m_trail_pt_y; 
-  
-  if(m_angle_relative) {
+  bool ok1, ok2, ok3, ok4;
+  double veh1_x = this->IvPBehavior::getLedgerInfoDbl("shoresideproxy", "x", ok1);
+  double veh1_y = this->IvPBehavior::getLedgerInfoDbl("shoresideproxy", "y", ok2);
+  double veh2_x = this->IvPBehavior::getLedgerInfoDbl("alpha", "x", ok3);
+  double veh2_y = this->IvPBehavior::getLedgerInfoDbl("alpha", "y", ok4);
+
+
+  if (ok1 && ok2 && ok3 && ok4) {
+    m_trail_pt_x = (veh1_x + veh2_x) / 2.0;
+    m_trail_pt_y = (veh1_y + veh2_y) / 2.0;
+  } else if (m_angle_relative) {
     double abs_angle = headingToRadians(angle360(m_cnh+m_trail_angle));
     m_trail_pt_x = m_cnx + m_trail_range*cos(abs_angle);
     m_trail_pt_y = m_cny + m_trail_range*sin(abs_angle);
-  }
-  else 
+  } else {
     projectPoint(m_trail_angle, m_trail_range, m_cnx, m_cny, m_trail_pt_x, m_trail_pt_y);
-
+  }
 }
