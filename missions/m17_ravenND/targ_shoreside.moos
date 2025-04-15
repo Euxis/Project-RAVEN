@@ -111,8 +111,8 @@ ProcessConfig = uFldNodeComms
   AppTick       = 2
   CommsTick     = 2
 
-           comms_range = 1000
-        critical_range = 1000
+           comms_range = 100
+        critical_range = 10
       min_msg_interval = 20
         max_msg_length = 1000
 

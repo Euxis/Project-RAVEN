@@ -65,6 +65,10 @@ private: // Configuration parameters
   bool    m_post_trail_dist_on_idle;
 
   bool    m_no_alert_request;
+    
+  bool    m_connections_ok;
+    
+  bool m_proxy_distance_exceeded; //TEST
 };
 
 
