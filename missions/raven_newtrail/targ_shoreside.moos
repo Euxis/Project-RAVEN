@@ -139,7 +139,7 @@ ProcessConfig = pMarineViewer
   appcast_viewable     = true
   appcast_color_scheme = indigo
 
-  scope = CONTACT_INFO
+  scope = CONTACT_INFO, TRAIL_INFO
 
   action = STATION_ALL = false
   action = STATION_ALL = true

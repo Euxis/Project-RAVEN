@@ -59,9 +59,8 @@ BHV_SimpleMidpoint::BHV_SimpleMidpoint(IvPDomain gdomain) : IvPContactBehavior(g
   m_time_on_leg    = 60;
   m_trail_pt_x     = 0;
   m_trail_pt_y     = 0;
-  m_trail_pt_z     = 0;
-    m_station_x = 0;
-    m_station_y = 0;
+  m_station_x = 0;
+  m_station_y = 0;
 
   m_post_trail_dist_on_idle = true;
 
@@ -105,9 +104,9 @@ bool BHV_SimpleMidpoint::setParam(string param, string param_val)
   else if(param == "mod_trail_range_pct")
     return(handleConfigModTrailRangePct(dval));
   else if(param == "station_y")
-      return(setNonNegDoubleOnString(m_station_y, param_val));
-    else if(param == "station_x")
-        return(setNonNegDoubleOnString(m_station_x, param_val));
+    return(setNonNegDoubleOnString(m_station_y, param_val));
+  else if(param == "station_x")
+    return(setNonNegDoubleOnString(m_station_x, param_val));
   else if(param == "trail_angle") {
     if(isNumber(param_val)) {
       m_trail_angle = angle180(dval);
@@ -179,9 +178,13 @@ void BHV_SimpleMidpoint::onHelmStart()
   request += ", on_flag=" + alert_templ;
   request += ",alert_range=" + doubleToStringX(m_pwt_outer_dist,1);
   request += ", cpa_range=" + doubleToStringX(m_pwt_outer_dist+5,1);
+  request += ", station_x=" + doubleToStringX(m_station_x, 1);
+  request += ", station_y=" + doubleToStringX(m_station_y, 1);
   request = augmentSpec(request, getFilterSummary());
   
   postMessage("BCM_ALERT_REQUEST", request);
+
+  
 }
 
 //-----------------------------------------------------------
@@ -198,6 +201,23 @@ IvPFunction *BHV_SimpleMidpoint::onRunState()
 
   calculateTrailPoint();
   postViewableTrailPoint();
+
+  // get distance between midpoint and contact
+  double contact_dist = distPointToPoint(m_trail_pt_x, m_trail_pt_y, m_cnx, m_cny);
+
+  // if the distance between midpoint and contact is larger than
+  // the commns radius, send exit message
+  if(contact_dist >= m_nm_radius){
+    postMessage("CONTACT_LEAVE", "true");
+    return(0);
+  }
+
+  postMessage("CONTACT_LEAVE", "false");
+
+
+  string request = "position = " + doubleToStringX(m_station_x) + ", " + doubleToStringX(m_station_y);
+
+  postMessage("STATION_POINT", request);
 
   // double adjusted_angle = angle180(m_cnh + m_trail_angle);
   // projectPoint(adjusted_angle, m_trail_range, m_cnx,
@@ -223,7 +243,6 @@ IvPFunction *BHV_SimpleMidpoint::onRunState()
   IvPFunction *ipf = 0;
   double head_x = cos(headingToRadians(m_cnh));
   double head_y = sin(headingToRadians(m_cnh));
-  double head_z = tan(headingToRadians(m_cnh));
   
   double distance = updateTrailDistance();
   bool   outside = (distance > m_radius);   
@@ -233,7 +252,6 @@ IvPFunction *BHV_SimpleMidpoint::onRunState()
       postMessage("REGION", "Outside nm_radius");
       
       AOF_CutRangeCPA aof(m_domain);
-      aof.setParam("cnlat", m_trail_pt_z);
       aof.setParam("cnlat", m_trail_pt_y);
       aof.setParam("cnlon", m_trail_pt_x);
       aof.setParam("cncrs", m_cnh);
@@ -257,20 +275,15 @@ IvPFunction *BHV_SimpleMidpoint::onRunState()
     }
     else { // inside nm_radius
       postMessage("REGION", "Inside nm_radius");
-      
+
       double ahead_by = head_x*(m_osx-m_trail_pt_x)+head_y*(m_osy-m_trail_pt_y);
-      //bool ahead = (ahead_by > 0);
       
-      // head toward point nm_radius ahead of trail point
-      double ppx = head_x*m_nm_radius+m_trail_pt_x;
-      double ppy = head_y*m_nm_radius+m_trail_pt_y;
-      double ppz = head_z*m_nm_radius+m_trail_pt_z;
-      double distp=hypot((ppx-m_osx), (ppy-m_osy));
-      double bear_x = (head_x*m_nm_radius+m_trail_pt_x-m_osx)/distp;
-      double bear_y = (head_y*m_nm_radius+m_trail_pt_y-m_osy)/distp;
-    
-      double modh = radToHeading(atan2(bear_y,bear_x));
-      
+      // Compute desired heading directly toward trail point
+      double dx = m_trail_pt_x - m_osx;
+      double dy = m_trail_pt_y - m_osy;
+
+      double modh = radToHeading(atan2(dy, dx));
+
       postIntMessage("TRAIL_HEADING", modh);
       
       ZAIC_PEAK hdg_zaic(m_domain, "course");
@@ -399,8 +412,8 @@ double BHV_SimpleMidpoint::getRelevance()
 void BHV_SimpleMidpoint::postViewableTrailPoint()
 {
   XYPoint m_trail_point;
-  m_trail_point.set_vertex(m_trail_pt_x, m_trail_pt_y, m_trail_pt_z);
-  m_trail_point.set_label(m_us_name + "_trailpoint");
+  m_trail_point.set_vertex(m_trail_pt_x, m_trail_pt_y);
+  m_trail_point.set_label(m_us_name + "_midpoint");
   m_trail_point.set_active(true);
 
   m_trail_point.set_vertex_size(8);
@@ -409,6 +422,16 @@ void BHV_SimpleMidpoint::postViewableTrailPoint()
 
   string spec = m_trail_point.get_spec();
   postMessage("VIEW_POINT", spec);
+
+  // post viewable stationpoint coordinate
+  XYPoint m_station_point;
+  m_station_point.set_vertex(m_station_x, m_station_y);
+  m_station_point.set_label("station point");
+  m_station_point.set_active(true);
+
+  m_station_point.set_vertex_size(4);
+  m_station_point.set_vertex_color("blue");
+  m_station_point.set_time(getBufferCurrTime());
 }
 
 
@@ -427,45 +450,35 @@ double BHV_SimpleMidpoint::updateTrailDistance()
 
 void BHV_SimpleMidpoint::calculateTrailPoint()
 {
-    //calc mid-point between shoreside and UUV
-    m_trail_pt_x = (m_station_x + m_cnx/*uuv_x*/) / 2.0;
-    m_trail_pt_y = (m_station_y + m_cny/*uuv_y*/) / 2.0;
-    
-    // get distance between midpoint and station
-    double midpoint_dist = distPointToPoint(m_trail_pt_x, m_trail_pt_y, m_station_x, m_station_y);
-    
-    // Get direction vector from station to midpoint
+  //calc mid-point between shoreside and UUV
+  m_trail_pt_x = (m_station_x + m_cnx) / 2.0;
+  m_trail_pt_y = (m_station_y + m_cny) / 2.0;
+
+  
+  
+  // get distance between midpoint and station
+  double midpoint_dist = distPointToPoint(m_trail_pt_x, m_trail_pt_y, m_station_x, m_station_y);
+
+  
+  
+  // Get direction vector from station to midpoint
   double direction_x = m_trail_pt_x - m_station_x;
   double direction_y = m_trail_pt_y - m_station_y;
 
-    // Calculate normalized direction vector
-      double magnitude = sqrt(pow(direction_x, 2) + pow(direction_y, 2));
-      double direction_x_normalized = direction_x / magnitude;
-      double direction_y_normalized = direction_y / magnitude;
+  // Calculate normalized direction vector
+  double magnitude = sqrt(pow(direction_x, 2) + pow(direction_y, 2));
+  double direction_x_normalized = direction_x / magnitude;
+  double direction_y_normalized = direction_y / magnitude;
 
-      // If the distance between midpoint and GCS is larger than
-      // the comms radius:
-      if(midpoint_dist >= m_nm_radius){
-        // Clamp the midpoint to the radius
-        m_trail_pt_x = m_station_x + direction_x_normalized * m_nm_radius;
-        m_trail_pt_y = m_station_y + direction_y_normalized * m_nm_radius;
-      }
+  // If the distance between midpoint and GCS is larger than
+  // the comms radius:
+  if(midpoint_dist >= m_nm_radius){
+    // Clamp the midpoint to the radius
+    m_trail_pt_x = m_station_x + direction_x_normalized * m_nm_radius;
+    m_trail_pt_y = m_station_y + direction_y_normalized * m_nm_radius;
+  }
 
-    /*if(m_trail_pt_x > 5 || m_trail_pt_x < -5 && m_trail_pt_y > 5 || m_trail_pt_y < -5 )
-    {
-      m_trail_pt_z = -20;
-    }
-    
+  
 
-     when alpha reaches edge of RAVEN range, RAVEN will lower its altitude to extend the range of its com range. It will sit at -50m until alpha reaches edge of comms range.
-     
-    while (m_cnx || m_cny > 45 from shoreside){
-     for every meter over 45, +1 to depth of raven
-     
-        m_trail_pt_z =
-     
-     }
-
-     */
 }
 

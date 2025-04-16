@@ -175,6 +175,7 @@ ProcessConfig = uFldNodeBroker
   bridge = src=VIEW_SEGLIST
   bridge = src=VIEW_CIRCLE
   bridge = src=APPCAST
+  bridge = src=STATION_UPDATE
   bridge = src=NODE_REPORT_LOCAL,  alias=NODE_REPORT
   bridge = src=NODE_MESSAGE_LOCAL, alias=NODE_MESSAGE
 }
@@ -214,8 +215,8 @@ ProcessConfig = pMarinePIDV22
 //------------------------------------------
 ProcessConfig = uSimMarineV22
 {
-  AppTick   = 10
-  CommsTick = 10
+  AppTick   = 2
+  CommsTick = 2
 
   start_pos = -50,-50
   prefix    = NAV
@@ -234,9 +235,8 @@ ProcessConfig = pHelmIvP
   domain       = speed:0:5:26
   domain       = depth,-200:0:4000:optional
 
+  // Replace with own lib directory
   ivp_behavior_dir = /home/aiden/RAVEN/Project-RAVEN/lib
-
-  
 }
 
 //--------------------------------------------------
@@ -268,7 +268,7 @@ ProcessConfig = pContactMgrV20
   CommsTick = 2
 
   contact_max_age = 3600
-  display_radii   = false
+  display_radii   = true
 
 	decay = 30,60
 	alert_verbose = false
@@ -283,8 +283,11 @@ ProcessConfig = pContactMgrV20
   //alert = id=avd, alert_range=50, cpa_range=60, alert_range_color=yellow
   //alert = id=avd, cpa_range_color=pink
   alert = id=trail, var=TRAIL_INFO, val="name=$[VNAME] # contact=$[VNAME]"
+
+  //alert = id=station, var=STATION_UPDATE, val="station_x=$[XPOS] # station_y=$[YPOS]"
+  
   //alert = id=trail, alert_range=140, cpa_range=185, alert_range_color=green
-  alert = id=trail, alert_range=140, cpa_range=185
+  alert = id=trail, alert_range=50, cpa_range=50
   //alert = id=trail, cpa_range_color=white
 }
 

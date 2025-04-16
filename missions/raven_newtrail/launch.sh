@@ -32,6 +32,9 @@ START_POS2="20,30"
 START_POS3="70,-125"
 SHORE_LISTEN="9300"
 
+GCS_X="5"
+GCS_Y="3"
+
 VPORT2="9302"
 VPORT3="9303"
 
@@ -44,7 +47,8 @@ nsplug meta_vehicle.moos targ_$VNAME1.moos -f WARP=$TIME_WARP \
    VPORT="9001"       SHARE_LISTEN="9301"                   \
    VTYPE="auv"     SHORE_LISTEN=$SHORE_LISTEN            \
    VNAME2=$VNAME2     VPORT2=$VPORT2                         \
-   KNOWS_CONTACTS=1   DEPLOY_HGILDA="false"
+   KNOWS_CONTACTS=1   DEPLOY_HGILDA="false"\
+   
 
 # SHORESIDE PROXY/GCS
 nsplug meta_vehicle.moos targ_$VNAME2.moos -f WARP=$TIME_WARP \
@@ -67,7 +71,8 @@ nsplug meta_shoreside.moos targ_shoreside.moos -f WARP=$TIME_WARP \
 nsplug meta_$VNAME1.bhv targ_$VNAME1.bhv -f VNAME=$VNAME1  \
     OVNAME=$VNAME2 START_POS=$START_POS2  \
     TRAIL_RANGE=$TRAIL_RANGE1              \
-    TRAIL_ANGLE=$TRAIL_ANGLE1
+    TRAIL_ANGLE=$TRAIL_ANGLE1\
+    GCS_X=$GCS_X     GCS_Y=$GCS_Y
 
 # SHORESIDE PROXY BEHAVIOR FILE
 # nsplug meta_$VNAME2.bhv targ_$VNAME2.bhv -f VNAME=$VNAME2  \

@@ -24,6 +24,7 @@ public:
   void         onRunToIdleState();
   void         onIdleState();
   void         onHelmStart();
+  //void         onCompleteState();
 
 protected:
   double  getRelevance();

@@ -24,14 +24,11 @@ set MODE = RETURNING {
 
 set MODE = PATROLLING {
   MODE   = ACTIVE
-  PATROL = true
   TRAIL != true
 } 
 
 set MODE = TRAILING {
   MODE   = ACTIVE
-  PATROL = true
-  TRAILING_ALLOWED = true
   TRAIL  = true
 } 
 
@@ -47,7 +44,7 @@ Behavior = BHV_Loiter
       clockwise = false
         radius = 8.0
       nm_radius = 15.0
-      polygon = radial:: x=20, y=30, radius=20, pts=8, snap=1, label=RAVEN_LOITER
+      polygon = radial:: x=5, y=3, radius=20, pts=8, snap=1, label=RAVEN_LOITER
   visual_hints = nextpt_color=white, nextpt_lcolor=khaki
   visual_hints = edge_color=blue, vertex_color=blue
   visual_hints = edge_size=1, vertex_size=2
@@ -99,11 +96,9 @@ Behavior = BHV_SimpleMidpoint
   name       = trail_contact
   pwt        = 100
   condition  = (MODE == TRAILING) or (MODE == PATROLLING)
-  condition  = TRAILING_ALLOWED = true
-  condition  = OUTOFB == false
+  //condition  = OUTOFB == false
   runflag    = TRAIL = true
-  idleflag   = TRAIL = false
-  endflag    = RETURN = true
+  endflag    = TRAIL = false
   updates    = TRAIL_INFO
   templating = spawn
 
@@ -116,8 +111,8 @@ Behavior = BHV_SimpleMidpoint
            match_name = shoresideproxy
          match_region = pts={10,50:200,70:200,-100:-50,-25}
 exit_on_filter_region = true
-		        station_y = 0
-		        station_x = 0
+		        station_y = 3
+		        station_x = 5
 
      trail_angle_type = relative
      on_no_contact_ok = true
@@ -137,32 +132,4 @@ Behavior = BHV_SimpleDepth
 
   depth = -50.0
 }
-
-
-// Behavior = BHV_OpRegion
-//  {
-//    // General Behavior Parameters
-//    // ---------------------------
-//    name         = op_region
-//    pwt          = 100
-//    condition    = MODE == ACTIVE
-//    updates      = OPREGION_UPDATES
-//    endflag      = RETURN = true
-
-//    // Parameters specific to this behavior
-//    // ------------------------------------
-//                  reset_var = OPREGION_RESET // example
-//         trigger_entry_time = 0.1              // default (seconds)
-//          trigger_exit_time = 4            // default (seconds) 
-
-//                    polygon = pts={-80,-50:-30,-175:150,-100:95,25}, label=area_x
-
-//         breached_poly_flag = RETURN = true
-//               reset_var    = OPREGION_RESET
-
-//               visual_hints = vertex_color = brown  // default
-//               visual_hints = vertex_size  = 3      // default
-//               visual_hints = edge_color   = aqua   // default
-//               visual_hints = edge_size    = 1      // default
-//  }
 
